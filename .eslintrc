@@ -1,6 +1,7 @@
 {
+  "parser": "@babel/eslint-parser",
   "extends": ["airbnb-base", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["@babel", "prettier"],
   "rules": {
     "no-console": 0,
     "prettier/prettier": [
@@ -9,7 +10,6 @@
         "trailingComma": "es5",
         "singleQuote": true,
         "semi": false,
-        "printWidth": 100,
         "endOfLine": "auto"
       }
     ]
