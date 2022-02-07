@@ -8,8 +8,6 @@ const itemsRouter = Router()
 wrapperRouter.use('/item', itemRouter)
 wrapperRouter.use('/items', itemsRouter)
 
-const list = []
-
 itemRouter.get('/:id', async (req, res) => {
   try {
     const { id } = req.params
