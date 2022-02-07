@@ -24,34 +24,24 @@ itemRouter.post('/', (req, res) => {
   return res.send({ itemIndex: list.length - 1 })
 })
 
-itemRouter.put('/', (req, res) => {
-  const { itemIndex, title, description } = req.body
-  if (itemIndex == null)
+itemRouter.put('/:index', (req, res) => {
+  const { index } = req.params
+  const { title, description } = req.body
+  if (index == null)
     return res.status(400).send({ error: 'Missing itemIndex field' })
 
-  list[itemIndex] = { title, description }
+  list[index] = { title, description }
   console.log('putting', req.body)
   console.log(list)
-  return res.send({ item: list[itemIndex] })
+  return res.send({ item: list[index] })
 })
 
-itemRouter.patch('/', (req, res) => {
-  const { itemIndex, ...update } = req.body
-
-  if (itemIndex == null)
-    return res.status(400).send({ error: 'Missing itemIndex field' })
-
-  list[itemIndex] = { ...list[itemIndex], ...update }
-  console.log('patching', req.body)
-  console.log(list)
-  return res.send({ item: list[itemIndex] })
-})
-
-itemRouter.delete('/', (req, res) => {
-  const { itemIndex, title, description } = req.body
+itemRouter.delete('/:index', (req, res) => {
+  const { index } = req.params
+  const { title, description } = req.body
 
   const idx =
-    itemIndex ??
+    index ??
     list.findIndex(
       ({ title: itemTitle, description: itemDescription }) =>
         title === itemTitle && itemDescription === description

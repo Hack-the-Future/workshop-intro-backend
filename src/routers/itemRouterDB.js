@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { Router } from 'express'
 import ListItem from '../store/models/listItem'
 
@@ -34,45 +35,21 @@ itemRouter.post('/', async (req, res) => {
   }
 })
 
-const updateItem = async (id, update) => {
-  // Either method works
-
-  // return ListItem.findByIdAndUpdate(
-  //   id,
-  //   {
-  //     $set: update,
-  //   },
-  //   { new: true }
-  // )
-  const { title, description } = update
-  const item = await ListItem.findById(id)
-  item.title = title ?? item.title
-  item.description = description ?? item.description
-  await item.save()
-  return item
-}
-
-itemRouter.put('/:id', async (req, res) => {
+itemRouter.put('/:id?', async (req, res) => {
   try {
     const { title, description } = req.body
     const { id } = req.params
+    const filter = { _id: id ?? new mongoose.Types.ObjectId() }
 
-    const item = await updateItem(id, { title, description })
+    const item = await ListItem.findOneAndUpdate(
+      filter,
+      {
+        $set: { title, description },
+      },
+      { new: true, upsert: true, setDefaultsOnInsert: false }
+    )
+
     console.log('putting')
-    return res.send({ item })
-  } catch (e) {
-    console.error(e)
-    return res.status(500).send({ error: 'unable to update item' })
-  }
-})
-
-itemRouter.patch('/:id', async (req, res) => {
-  try {
-    const update = req.body
-    const { id } = req.params
-
-    const item = await updateItem(id, update)
-    console.log('patching')
     return res.send({ item })
   } catch (e) {
     console.error(e)
